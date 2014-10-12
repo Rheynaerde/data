@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+ 
+body {
+  font: 20px sans-serif;
+}
+ 
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+ 
+.bar {
+  fill: steelblue;
+}
+ 
+.x.axis path {
+  display: none;
+}
+ 
+</style>
+<body>
+<button onclick="showIndex(currentIndex - 1);" id="prevbutton">Prev</button><button onclick="showIndex(currentIndex + 1);"  id="nextbutton">Next</button><br>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script>
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+ 
+var x0 = d3.scale.ordinal()
+    .rangeRoundBands([0, width], 0.1);
+ 
+var x1 = d3.scale.ordinal();
+ 
+var y = d3.scale.linear()
+    .range([height, 0]);
+ 
+var xAxis = d3.svg.axis()
+    .scale(x0)
+    .orient("bottom");
+
+var xAxisGroup;
+ 
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .tickFormat(d3.format("d"));
+ 
+function color(name) {
+    return {"Nieuw" : "#aaffaa", "Gestopt": "#ffaaaa", "Onbeslist": "#ffcccc", "Netto": "#aaaaff"}[name];
+}
+ 
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+ 
+var yBegin;
+ 
+var innerColumns = {
+  "column2" : ["Gestopt", "Onbeslist"],
+  "column1" : ["Nieuw"]
+}
+
+var globalData;
+var currentIndex;
+var previousIndex;
+var columnHeaders;
+ 
+d3.csv("ledenverloop.csv", function(error, data) {
+  //columnHeaders = ["Gestopt", "Onbeslist", "Nieuw"];
+  columnHeaders = d3.keys(data[0]).filter(function(key) { return key !== "Overgang" && key !== "Netto"; });
+  data.forEach(function(d) {
+    var yColumn = new Array();
+    d.columnDetails = columnHeaders.map(function(name) {
+      for (ic in innerColumns) {
+        if($.inArray(name, innerColumns[ic]) >= 0){
+          if (!yColumn[ic]){
+            yColumn[ic] = 0;
+          }
+          yBegin = yColumn[ic];
+          yColumn[ic] += +d[name];
+          return {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin,};
+        }
+      }
+    });
+    d.total = d3.max(d.columnDetails, function(d) { 
+      return d.yEnd; 
+    });
+  });
+ 
+  y.domain([0, d3.max(data, function(d) { 
+    return d.total; 
+  })]);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".7em")
+      .style("text-anchor", "end")
+      .text("");
+
+  xAxisGroup = svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")");
+
+  globalData = data;
+  currentIndex = 0;
+  //currentIndex = data.length - 1;
+  showIndex(currentIndex);
+});
+
+function showIndex(index) { 
+  previousIndex = currentIndex;
+  currentIndex = index;
+  data = globalData;
+  
+  $("#prevbutton").attr("disabled", index == 0);
+  $("#nextbutton").attr("disabled", index == data.length - 1);
+
+  x0.domain([data[index].Overgang]);
+  x1.domain(d3.keys(innerColumns)).rangeRoundBands([200, x0.rangeBand()-200]);
+ 
+  xAxisGroup.call(xAxis);
+
+  var verloopD = svg.selectAll(".verloop")
+      .data([data[index]], function(d) {return d.Overgang;});
+
+  verloopD.exit().remove();
+ 
+  var verloop = verloopD
+    .enter().append("g")
+      .attr("class", "verloop")
+      .attr("transform", function(d) { return "translate(" + x0(d.Overgang) + ",0)"; });
+ 
+   verloop.selectAll("rect")
+      .data(function(d) { return d.columnDetails; })
+    .exit().remove();
+
+  verloop.selectAll("rect")
+      .data(function(d) { return d.columnDetails; })
+    .enter().append("rect")
+      .attr("width", x1.rangeBand())
+      .attr("x", function(d) { 
+        return x1(d.column);
+         })
+      .attr("y", function(d) { 
+        return y(d.yEnd); 
+      })
+      .attr("height", function(d) { 
+        return y(d.yBegin) - y(d.yEnd); 
+      })
+      .style("fill", function(d) { return color(d.name); });
+
+  var legend = svg.selectAll(".legend")
+      .data(columnHeaders.slice().filter(function(key) { return data[index][key] > 0; }))
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 40 + ")"; });
+
+  svg.selectAll(".legend")
+      .data(columnHeaders.slice().filter(function(key) { return data[index][key] > 0; }))
+    .exit().transition().duration(500).style("opacity", 0).remove();
+ 
+  legend.append("rect")
+      .attr("x", width - 36)
+      .attr("width", 36)
+      .attr("height", 36)
+      .style("fill", color);
+ 
+  legend.append("text")
+      .attr("x", width - 48)
+      .attr("y", 18)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
+  
+  legend
+      .style("opacity", 0)
+      .transition().duration(1000).style("opacity", 1);
+}
+
+
+</script>
+</body></html>
