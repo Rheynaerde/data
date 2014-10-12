@@ -91,6 +91,7 @@ var globalData;
 var currentIndex;
 var previousIndex;
 var columnHeaders;
+var verloop;
  
 d3.csv("ledenverloop.csv", function(error, data) {
   //columnHeaders = ["Gestopt", "Onbeslist", "Nieuw"];
@@ -132,6 +133,12 @@ d3.csv("ledenverloop.csv", function(error, data) {
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")");
 
+  x0.domain([0]);
+
+  verloop = svg.append("g")
+      .attr("id", "verloop")
+      .attr("transform", function(d) { return "translate(" + x0(0) + ",0)"; });
+
   globalData = data;
   currentIndex = 0;
   //currentIndex = data.length - 1;
@@ -150,35 +157,28 @@ function showIndex(index) {
   x1.domain(d3.keys(innerColumns)).rangeRoundBands([200, x0.rangeBand()-200]);
  
   xAxisGroup.call(xAxis);
-
-  var verloopD = svg.selectAll(".verloop")
-      .data([data[index]], function(d) {return d.Overgang;});
-
-  verloopD.exit().remove();
- 
-  var verloop = verloopD
-    .enter().append("g")
-      .attr("class", "verloop")
-      .attr("transform", function(d) { return "translate(" + x0(d.Overgang) + ",0)"; });
  
    verloop.selectAll("rect")
-      .data(function(d) { return d.columnDetails; })
+      .data(data[index].columnDetails)
     .exit().remove();
 
   verloop.selectAll("rect")
-      .data(function(d) { return d.columnDetails; })
+      .data(data[index].columnDetails)
     .enter().append("rect")
       .attr("width", x1.rangeBand())
       .attr("x", function(d) { 
         return x1(d.column);
          })
+      .style("fill", function(d) { return color(d.name); });
+
+  verloop.selectAll("rect")
+      .data(data[index].columnDetails)
       .attr("y", function(d) { 
         return y(d.yEnd); 
       })
       .attr("height", function(d) { 
         return y(d.yBegin) - y(d.yEnd); 
-      })
-      .style("fill", function(d) { return color(d.name); });
+      });
 
   var legend = svg.selectAll(".legend")
       .data(columnHeaders.slice().filter(function(key) { return data[index][key] > 0; }))
