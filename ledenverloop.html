@@ -45,6 +45,8 @@ body {
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>
+var transitionLength = 500;
+
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
@@ -160,17 +162,17 @@ function showIndex(index) {
   //shifting of label on X axis
   if(currentIndex > previousIndex){
     xAxisGroup
-      .transition().duration(250)
+      .transition().duration(transitionLength/2)
       .attr("transform", "translate(-" + width + "," + height + ")")
       .each('end', function(d){ xAxisGroup.attr("transform", "translate(" + width + "," + height + ")").call(xAxis);})
-      .transition().duration(250)
+      .transition().duration(transitionLength/2)
       .attr("transform", "translate(0," + height + ")");
   } else if(currentIndex < previousIndex) {
     xAxisGroup
-      .transition().duration(250)
+      .transition().duration(transitionLength/2)
       .attr("transform", "translate(" + width + "," + height + ")")
       .each('end', function(d){ xAxisGroup.attr("transform", "translate(-" + width + "," + height + ")").call(xAxis);})
-      .transition().duration(250)
+      .transition().duration(transitionLength/2)
       .attr("transform", "translate(0," + height + ")");
   } else {
     //the first time we just need to call xAxis
@@ -192,7 +194,7 @@ function showIndex(index) {
 
   verloop.selectAll("rect")
       .data(data[index].columnDetails)
-      .transition().duration(500)
+      .transition().duration(transitionLength)
       .attr("y", function(d) { 
         return y(d.yEnd); 
       })
@@ -208,7 +210,7 @@ function showIndex(index) {
 
   svg.selectAll(".legend")
       .data(columnHeaders.slice().filter(function(key) { return data[index][key] > 0; }))
-    .exit().transition().duration(500).style("opacity", 0).remove();
+    .exit().transition().duration(transitionLength).style("opacity", 0).remove();
  
   legend.append("rect")
       .attr("x", width - 36)
@@ -225,7 +227,7 @@ function showIndex(index) {
   
   legend
       .style("opacity", 0)
-      .transition().duration(1000).style("opacity", 1);
+      .transition().duration(2*transitionLength).style("opacity", 1);
 }
 
 
