@@ -4,6 +4,24 @@
  
 body {
   font: 20px sans-serif;
+  overflow: hidden;
+}
+
+.outerwrapper {
+  width: 99%;
+  height: 99%;
+  display: table;
+  position: absolute;
+}
+
+.wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#graph {
+  margin: auto;
+  position: relative;
 }
  
 .axis path,
@@ -23,7 +41,7 @@ body {
  
 </style>
 <body>
-<button onclick="showIndex(currentIndex - 1);" id="prevbutton">Prev</button><button onclick="showIndex(currentIndex + 1);"  id="nextbutton">Next</button><br>
+<div class="outerwrapper"><div class="wrapper"><div id="graph"></div></div></div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>
@@ -53,8 +71,10 @@ var yAxis = d3.svg.axis()
 function color(name) {
     return {"Nieuw" : "#aaffaa", "Gestopt": "#ffaaaa", "Onbeslist": "#ffcccc", "Netto": "#aaaaff"}[name];
 }
+
+d3.select("#graph").style("width", width + margin.left + margin.right + "px");
  
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#graph").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
