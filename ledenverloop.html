@@ -156,8 +156,26 @@ function showIndex(index) {
 
   x0.domain([data[index].Overgang]);
   x1.domain(d3.keys(innerColumns)).rangeRoundBands([200, x0.rangeBand()-200]);
- 
-  xAxisGroup.call(xAxis);
+
+  //shifting of label on X axis
+  if(currentIndex > previousIndex){
+    xAxisGroup
+      .transition().duration(250)
+      .attr("transform", "translate(-" + width + "," + height + ")")
+      .each('end', function(d){ xAxisGroup.attr("transform", "translate(" + width + "," + height + ")").call(xAxis);})
+      .transition().duration(250)
+      .attr("transform", "translate(0," + height + ")");
+  } else if(currentIndex < previousIndex) {
+    xAxisGroup
+      .transition().duration(250)
+      .attr("transform", "translate(" + width + "," + height + ")")
+      .each('end', function(d){ xAxisGroup.attr("transform", "translate(-" + width + "," + height + ")").call(xAxis);})
+      .transition().duration(250)
+      .attr("transform", "translate(0," + height + ")");
+  } else {
+    //the first time we just need to call xAxis
+    xAxisGroup.call(xAxis);
+  }
  
    verloop.selectAll("rect")
       .data(data[index].columnDetails)
