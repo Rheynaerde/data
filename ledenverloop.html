@@ -189,5 +189,15 @@ function showIndex(index) {
 }
 
 
+//enable navigation using arrow keys
+$("body").keydown(function(e) {
+  if(e.keyCode == 37 && currentIndex > 0) { // left
+    showIndex(currentIndex - 1);
+  }
+  else if(e.keyCode == 39 && currentIndex < globalData.length - 1) { // right
+    showIndex(currentIndex + 1);
+  }
+});
+
 </script>
 </body></html>
