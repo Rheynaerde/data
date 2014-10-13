@@ -72,7 +72,7 @@ var yAxis = d3.svg.axis()
     .tickFormat(d3.format("d"));
  
 function color(name) {
-    return {"Nieuw" : "#aaffaa", "Gestopt": "#ffaaaa", "Onbeslist": "#ffcccc", "Netto": "#aaaaff"}[name];
+    return {"Nieuw" : "#2ca02c", "Gestopt": "#d62728", "Onbeslist": "#ff9896", "Netto": "#1f77b4"}[name];
 }
  
 d3.select("#graph").style("width", width + margin.left + margin.right + "px");
