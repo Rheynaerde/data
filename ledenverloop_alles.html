@@ -4,8 +4,26 @@
  
 body {
   font: 10px sans-serif;
+  overflow: hidden;
 }
- 
+
+.outerwrapper {
+  width: 99%;
+  height: 99%;
+  display: table;
+  position: absolute;
+}
+
+.wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#graph {
+  margin: auto;
+  position: relative;
+}
+
 .axis path,
 .axis line {
   fill: none;
@@ -23,6 +41,7 @@ body {
  
 </style>
 <body>
+<div class="outerwrapper"><div class="wrapper"><div id="graph"></div></div></div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>
@@ -51,7 +70,9 @@ function color(name) {
     return {"Nieuw" : "#aaffaa", "Gestopt": "#ffaaaa", "Onbeslist": "#ffcccc", "Netto": "#aaaaff"}[name];
 }
  
-var svg = d3.select("body").append("svg")
+d3.select("#graph").style("width", width + margin.left + margin.right + "px");
+
+var svg = d3.select("#graph").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
