@@ -148,8 +148,14 @@ d3.csv("ledenverloop.csv", function(error, data) {
       .attr("transform", function(d) { return "translate(" + x0(0) + ",0)"; });
 
   globalData = data;
-  currentIndex = 0;
-  //currentIndex = data.length - 1;
+
+  if(window.location.hash) {
+      var hash = window.location.hash.substring(1);
+      currentIndex = +hash;
+  } else {
+      currentIndex = 0;
+  }
+
   showIndex(currentIndex);
 });
 
