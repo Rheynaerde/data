@@ -91,6 +91,10 @@ d3.csv("ledenaantal.csv", type, function(error, data) {
       .style("fill", "steelblue")
       .attr("x", function(d) { return x(d.seizoen); })
       .attr("width", x.rangeBand())
+      .attr("y", height)
+      .attr("height", 0)
+    .transition().duration(2000)
+    .delay(function(d) { return x(d.seizoen) * 3; })
       .attr("y", function(d) { return y(d.aantal); })
       .attr("height", function(d) { return height - y(d.aantal); });
 
