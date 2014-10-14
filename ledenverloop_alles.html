@@ -28,6 +28,10 @@ body {
   visible: false;
 }
 
+#next {
+  visible: false;
+}
+
 .axis path,
 .axis line {
   fill: none;
@@ -47,6 +51,7 @@ body {
 <body>
 <div class="outerwrapper"><div class="wrapper"><div id="graph"></div></div></div>
 <a href="ledenverloop.html#3" id="prev"></a>
+<a href="ledenaantal.html" id="next"></a>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>
@@ -179,6 +184,8 @@ d3.csv("ledenverloop.csv", function(error, data) {
 $("body").keydown(function(e) {
   if(e.keyCode == 37) { //left
     window.location.href = $("#prev").attr('href');
+  } else if(e.keyCode == 39) { //right
+    window.location.href = $("#next").attr('href');
   }
 });
 </script>
