@@ -84,8 +84,10 @@ d3.csv("ledenaantal.csv", type, function(error, data) {
       .attr("dy", ".71em")
       .style("text-anchor", "end")
       .text("Aantal");
+
+  var graph = svg.selectAll(".bar").data(data);
   
-  svg.selectAll(".bar").data(data)
+  graph
     .enter().append("rect")
       .attr("class", "bar")
       .style("fill", "steelblue")
@@ -97,6 +99,20 @@ d3.csv("ledenaantal.csv", type, function(error, data) {
     .delay(function(d) { return x(d.seizoen) * 3; })
       .attr("y", function(d) { return y(d.aantal); })
       .attr("height", function(d) { return height - y(d.aantal); });
+
+  graph
+    .enter().append("text")
+      .style("text-anchor", "middle")
+      .style("font", "20px sans-serif")
+      .text(function(d) { return d.aantal; })
+      .attr("x", function(d) { return x(d.seizoen) + x.rangeBand()/2; })
+      .attr("y", height)
+      .attr("dy", "-.5em")
+      .style("opacity", "0")
+    .transition().duration(2000)
+    .delay(function(d) { return x(d.seizoen) * 3; })
+      .attr("y", function(d) { return y(d.aantal); })
+      .style("opacity", "1");
 
 });
 
