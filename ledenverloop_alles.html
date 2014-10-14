@@ -107,7 +107,7 @@ d3.csv("ledenverloop.csv", function(error, data) {
           }
           yBegin = yColumn[ic];
           yColumn[ic] += +d[name];
-          return {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin,};
+          return {name: name, column: ic, yBegin: yBegin, yEnd: +d[name] + yBegin, Overgang: d.Overgang};
         }
       }
     });
@@ -151,13 +151,17 @@ d3.csv("ledenverloop.csv", function(error, data) {
       .attr("x", function(d) { 
         return x1(d.column);
          })
+      .attr("y", height)
+      .attr("height", 0)
+      .style("fill", function(d) { return color(d.name); })
+    .transition().duration(2000)
+    .delay(function(d) { return x0(d.Overgang) * 3; })
       .attr("y", function(d) { 
         return y(d.yEnd); 
       })
       .attr("height", function(d) { 
         return y(d.yBegin) - y(d.yEnd); 
-      })
-      .style("fill", function(d) { return color(d.name); });
+      });
  
   var legend = svg.selectAll(".legend")
       .data(columnHeaders.slice())
