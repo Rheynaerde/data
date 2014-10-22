@@ -69,9 +69,9 @@ d3.csv("ledenverloop.csv", function(error, data) {
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
 
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
+//  svg.append("g")
+//      .attr("class", "y axis")
+//      .call(yAxis)
 
   var overgang = svg.selectAll(".overgang")
       .data(data)
