@@ -124,21 +124,6 @@ d3.csv("ledenverloop.csv", function(error, data) {
     return d.total; 
   })]);
  
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
- 
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".7em")
-      .style("text-anchor", "end")
-      .text("");
- 
   var project_stackedbar = svg.selectAll(".project_stackedbar")
       .data(data)
     .enter().append("g")
@@ -183,8 +168,23 @@ d3.csv("ledenverloop.csv", function(error, data) {
       .style("text-anchor", "end")
       .text(function(d) { return d; });
  
-});
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
  
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".7em")
+      .style("text-anchor", "end")
+      .text("");
+
+});
+
 //enable navigation using arrow keys
 $("body").keydown(function(e) {
   if(e.keyCode == 37) { //left
