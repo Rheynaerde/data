@@ -96,7 +96,8 @@ var innerColumns = {
 }
  
 d3.csv("ledenverloop.csv", function(error, data) {
-  var columnHeaders = ["Gestopt", "Onbeslist", "Nieuw"];
+//  var columnHeaders = ["Gestopt", "Onbeslist", "Nieuw"];
+  var columnHeaders = ["Gestopt", "Nieuw"];
   data.forEach(function(d) {
     var yColumn = new Array();
     d.columnDetails = columnHeaders.map(function(name) {
