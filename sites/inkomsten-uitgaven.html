@@ -107,9 +107,12 @@ d3.csv("inkomsten-uitgaven.csv", function(error, data) {
     .enter().append("rect")
       .attr("x", 3*x.rangeBand()/8)
       .attr("width", x.rangeBand()/4)
+      .style("fill", function(d) { return color(d.name); })
+      .attr("y", function(d) { return y(0); })
+      .attr("height", 0)
+    .transition().duration(2000)
       .attr("y", function(d) { return y(d.y1); })
-      .attr("height", function(d) { return y(d.y0) - y(d.y1); })
-      .style("fill", function(d) { return color(d.name); });
+      .attr("height", function(d) { return y(d.y0) - y(d.y1); });
 
   var legend = svg.selectAll(".richting").selectAll(".legend")
       .data(function(d) { return d.bedragen; })
@@ -121,7 +124,8 @@ d3.csv("inkomsten-uitgaven.csv", function(error, data) {
       .attr("x1", function(d) { return d.odd ? x.rangeBand()/8 : x.rangeBand()/16;})
       .attr("x2", function(d) { return d.odd ? 5*x.rangeBand()/16 : 3*x.rangeBand()/16;})
       .attr("y1", function(d) { return d.odd ? d.name.split("_")[1].split(":")[1].replace(")","") : 0;})
-      .attr("y2", function(d) { return d.odd ? 0 : d.name.split("_")[1].split(":")[1].replace(")","");});
+      .attr("y2", function(d) { return d.odd ? 0 : d.name.split("_")[1].split(":")[1].replace(")","");})
+      .attr("opacity", "0").transition().delay(1000).duration(1500).attr("opacity", "1");
 
   legend.append("text")
       .attr("x", function(d) { return d.odd ? x.rangeBand()/8 : 3*x.rangeBand()/16;})
@@ -129,7 +133,8 @@ d3.csv("inkomsten-uitgaven.csv", function(error, data) {
       .attr("dx", function(d) { return d.odd ? "-.35em" : ".35em";})
       .style("text-anchor", function(d) { return d.odd ? "end" : "start";})
       .attr("transform", function(d) { return "translate" + d.name.split("_")[1].replace(":",","); })
-      .text(function(d) { return d.name.split("_")[0]; });
+      .text(function(d) { return d.name.split("_")[0]; })
+      .attr("opacity", "0").transition().delay(1000).duration(1500).attr("opacity", "1");
 
   svg.append("g")
       .attr("class", "x axis")
