@@ -59,30 +59,30 @@ d3.csv("samenstelling.csv", function(error, data) {
 
   data.forEach(function(d) {
     var y0 = 0;
-    d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
-    d.ages.forEach(function(d) { d.y0 /= y0; d.y1 /= y0; });
+    d.composition = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
+    d.composition.forEach(function(d) { d.y0 /= y0; d.y1 /= y0; });
   });
 
-  data.sort(function(a, b) { return b.ages[0].y1 - a.ages[0].y1; });
+  data.sort(function(a, b) { return b.composition[0].y1 - a.composition[0].y1; });
 
   x.domain(data.map(function(d) { return d.Orgaan; }));
 
-  var state = svg.selectAll(".state")
+  var organ = svg.selectAll(".organ")
       .data(data)
     .enter().append("g")
-      .attr("class", "state")
+      .attr("class", "organ")
       .attr("transform", function(d) { return "translate(" + x(d.Orgaan) + ",0)"; });
 
-  state.selectAll("rect")
-      .data(function(d) { return d.ages; })
+  organ.selectAll("rect")
+      .data(function(d) { return d.composition; })
     .enter().append("rect")
       .attr("width", x.rangeBand())
       .attr("y", function(d) { return y(d.y1); })
       .attr("height", function(d) { return y(d.y0) - y(d.y1); })
       .style("fill", function(d) { return color(d.name); });
 
-  var legend = svg.select(".state:last-child").selectAll(".legend")
-      .data(function(d) { return d.ages; })
+  var legend = svg.select(".organ:last-child").selectAll(".legend")
+      .data(function(d) { return d.composition; })
     .enter().append("g")
       .attr("class", "legend")
       .attr("transform", function(d) { return "translate(" + 9*x.rangeBand()/10 + "," + y((d.y0 + d.y1) / 2) + ")"; });
