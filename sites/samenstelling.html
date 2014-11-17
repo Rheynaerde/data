@@ -2,6 +2,23 @@
 <meta charset="utf-8">
 <style>
 
+.outerwrapper {
+  width: 99%;
+  height: 99%;
+  display: table;
+  position: absolute;
+}
+
+.wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#graph {
+  margin: auto;
+  position: relative;
+}
+
 body {
   font: 10px sans-serif;
 }
@@ -24,6 +41,7 @@ body {
 
 </style>
 <body>
+<div class="outerwrapper"><div class="wrapper"><div id="graph"></div></div></div>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
@@ -48,7 +66,9 @@ var yAxis = d3.svg.axis()
     .orient("left")
     .tickFormat(d3.format(".0%"));
 
-var svg = d3.select("body").append("svg")
+d3.select("#graph").style("width", width + margin.left + margin.right + "px");
+
+var svg = d3.select("#graph").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
