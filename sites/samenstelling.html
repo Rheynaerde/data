@@ -94,7 +94,7 @@ d3.csv("samenstelling.csv", function(error, data) {
       .attr("class", "organ")
       .attr("transform", function(d) { return "translate(" + x(d.Orgaan) + ",0)"; });
 
-  var animationFactor = 5;
+  var animationFactor = 3;
 
   organ.selectAll("rect")
       .data(function(d) { return d.composition; })
