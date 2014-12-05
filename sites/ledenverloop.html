@@ -233,6 +233,10 @@ function showIndex(index) {
       .attr("x", function(d) { 
         return x1(d.column);
          })
+      .attr("y", function(d) { 
+        return y(d.yBegin); 
+      })
+      .attr("height", 0)
       .style("fill", function(d) { return color(d.name); });
 
   verloop.selectAll("rect")
