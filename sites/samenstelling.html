@@ -63,11 +63,20 @@ background-color: #69C;
 
 div .left { float: left; font: 20px sans-serif; }
 div .right { float: right; font: 20px sans-serif; } 
+
+div .title {
+  float: none;
+  margin:auto;
+  margin-bottom: 50px;
+  text-align: center;
+  font: 30px sans-serif;
+  font-weight: bold;
+}
 </style>
 <body>
 <div class="outerwrapper">
   <div class="left"><a href="#" onclick="previous();"> &#9664;</a></div>
-  <div class="wrapper"><div id="graph"></div></div>
+  <div class="wrapper"><div class="title">Samenstelling van verschillende organen</div><div id="graph"></div></div>
   <div class="right"><a href="#" onclick="next();"> &#9654;</a></div>
 </div>
 <a href="categorie.html" id="prev" class="hiddenlink"></a>
