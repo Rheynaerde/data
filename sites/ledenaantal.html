@@ -34,14 +34,35 @@
   display: none;
 }
 
-#prev {
-  visible: false;
+a .hiddenlink {
+  visibility: hidden;
 }
 
+div a {
+display: block;
+width: 5em;
+color: #FFF;
+background-color: #036;
+padding: .2em 0;
+text-align: center;
+text-decoration: none;
+}
+
+div a:hover {
+color: #FFF;
+background-color: #69C;
+}
+
+div .left { float: left; font: 20px sans-serif; }
+div .right { float: right; font: 20px sans-serif; } 
 </style>
 <body>
-<div class="outerwrapper"><div class="wrapper"><div id="graph"></div></div></div>
-<a href="ledenverloop_alles.html" id="prev"></a>
+<div class="outerwrapper">
+  <div class="left"><a href="#" onclick="previous();"> &#9664;</a></div>
+  <div class="wrapper"><div id="graph"></div></div>
+  <div class="right"><a href="#" onclick="next();"> &#9654;</a></div>
+</div>
+<a href="ledenverloop.html#0" id="next" class="hiddenlink"></a>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>
@@ -119,17 +140,37 @@ d3.csv("ledenaantal.csv", type, function(error, data) {
       .attr("y", function(d) { return y(d.aantal); })
       .style("opacity", "1");
 
+  updateButtons();
 });
 
 function type(d) {
   d.aantal = +d.aantal;
   return d;
 }
+
+//==============navigation==============
+
+function previous(){
+   //first page: do nothing
+}
+
+function next(){
+  //go to next page
+  window.location.href = $("#next").attr('href');
+  updateButtons();
+}
+
+function updateButtons(){
+  $(".left").attr("style", "visibility: hidden");
+  $(".right").attr("style", "visibility: visible");
+}
  
 //enable navigation using arrow keys
 $("body").keydown(function(e) {
   if(e.keyCode == 37) { //left
-    window.location.href = $("#prev").attr('href');
+    previous();
+  } else if(e.keyCode == 39) { //right
+    next();
   }
 });
 </script>

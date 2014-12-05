@@ -42,11 +42,37 @@ body {
 .x.axis path {
   display: none;
 }
- 
+
+a .hiddenlink {
+  visibility: hidden;
+}
+
+div a {
+display: block;
+width: 5em;
+color: #FFF;
+background-color: #036;
+padding: .2em 0;
+text-align: center;
+text-decoration: none;
+}
+
+div a:hover {
+color: #FFF;
+background-color: #69C;
+}
+
+div .left { float: left; font: 20px sans-serif; }
+div .right { float: right; font: 20px sans-serif; } 
 </style>
 <body>
-<div class="outerwrapper"><div class="wrapper"><div id="graph"></div></div></div>
-<a href="ledenverloop_alles.html" id="next"></a>
+<div class="outerwrapper">
+  <div class="left"><a href="#" onclick="previous();"> &#9664;</a></div>
+  <div class="wrapper"><div id="graph"></div></div>
+  <div class="right"><a href="#" onclick="next();"> &#9654;</a></div>
+</div>
+<a href="ledenaantal.html" id="prev" class="hiddenlink"></a>
+<a href="ledenverloop_alles.html" id="next" class="hiddenlink"></a>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script>
@@ -163,9 +189,6 @@ function showIndex(index) {
   previousIndex = currentIndex;
   currentIndex = index;
   data = globalData;
-  
-  $("#prevbutton").attr("disabled", index == 0);
-  $("#nextbutton").attr("disabled", index == data.length - 1);
 
   x0.domain([data[index].Overgang]);
   x1.domain(d3.keys(innerColumns)).rangeRoundBands([200, x0.rangeBand()-200]);
@@ -241,18 +264,40 @@ function showIndex(index) {
       .transition().duration(2*transitionLength).style("opacity", 1);
 }
 
+//==============navigation==============
 
-//enable navigation using arrow keys
-$("body").keydown(function(e) {
-  if(e.keyCode == 37 && currentIndex > 0) { // left
+function previous(){
+  if(currentIndex > 0) {
     showIndex(currentIndex - 1);
+  } else {
+    //at the beginning, go to previous page
+    window.location.href = $("#prev").attr('href');
   }
-  else if(e.keyCode == 39 && currentIndex < globalData.length - 1) { // right
+  updateButtons();
+}
+
+function next(){
+  if(currentIndex < globalData.length - 1) {
     showIndex(currentIndex + 1);
-  } else if(e.keyCode == 39) { //right when at the end
+  } else {
+    //reached the end, go to next page
     window.location.href = $("#next").attr('href');
   }
-});
+  updateButtons();
+}
 
+function updateButtons(){
+  $(".left").attr("style", "visibility: visible");
+  $(".right").attr("style", "visibility: visible");
+}
+ 
+//enable navigation using arrow keys
+$("body").keydown(function(e) {
+  if(e.keyCode == 37) { //left
+    previous();
+  } else if(e.keyCode == 39) { //right
+    next();
+  }
+});
 </script>
 </body></html>
